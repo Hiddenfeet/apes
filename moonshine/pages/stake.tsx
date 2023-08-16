@@ -67,17 +67,21 @@ const Stake: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.h1}>Stake Your NFTs</h1>
+      <h1 className={styles.h1} style={{ color: "white", fontWeight: "bold" }}>
+        Stake Your Apes
+      </h1>
       <hr className={`${styles.divider} ${styles.spacerTop}`} />
 
       {!address ? (
         <ConnectWallet />
       ) : (
         <>
-          <h2>Your Tokens</h2>
+          <h2 style={{ color: "white" }}>Your Tokens</h2>
           <div className={styles.tokenGrid}>
             <div className={styles.tokenItem}>
-              <h3 className={styles.tokenLabel}>Claimable Rewards</h3>
+              <h3 className={styles.tokenLabel} style={{ color: "white" }}>
+                Claimable Rewards
+              </h3>
               <p className={styles.tokenValue}>
                 <b>
                   {!claimableRewards
@@ -88,7 +92,9 @@ const Stake: NextPage = () => {
               </p>
             </div>
             <div className={styles.tokenItem}>
-              <h3 className={styles.tokenLabel}>Current Balance</h3>
+              <h3 className={styles.tokenLabel} style={{ color: "white" }}>
+                Current Balance
+              </h3>
               <p className={styles.tokenValue}>
                 <b>{tokenBalance?.displayValue}</b> {tokenBalance?.symbol}
               </p>
@@ -103,7 +109,7 @@ const Stake: NextPage = () => {
           </Web3Button>
 
           <hr className={`${styles.divider} ${styles.spacerTop}`} />
-          <h2>Your Staked NFTs</h2>
+          <h2 style={{ color: "white" }}>STAKED</h2>
           <div className={styles.nftBoxGrid}>
             {stakedTokens &&
               stakedTokens[0]?.map((stakedToken: BigNumber) => (
@@ -115,7 +121,7 @@ const Stake: NextPage = () => {
           </div>
 
           <hr className={`${styles.divider} ${styles.spacerTop}`} />
-          <h2>Your Unstaked NFTs</h2>
+          <h2 style={{ color: "white" }}>UNSTAKED</h2>
           <div className={styles.nftBoxGrid}>
             {ownedNfts?.map((nft) => (
               <div className={styles.nftBox} key={nft.metadata.id.toString()}>
@@ -123,7 +129,7 @@ const Stake: NextPage = () => {
                   metadata={nft.metadata}
                   className={styles.nftMedia}
                 />
-                <h3>{nft.metadata.name}</h3>
+                <h3 style={{ color: "white" }}>{nft.metadata.name}</h3>
                 <Web3Button
                   contractAddress={stakingContractAddress}
                   action={() => stakeNft(nft.metadata.id)}
