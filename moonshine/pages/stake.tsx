@@ -13,22 +13,16 @@ import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import NFTCard from "../components/NFTCard";
 import {
-  nftDropContractAddress,
   stakingContractAddress,
-  tokenContractAddress,
 } from "../consts/contractAddresses";
 import styles from "../styles/Home.module.css";
 
 const Stake: NextPage = () => {
   const address = useAddress();
-  const { contract: nftDropContract } = useContract(
-    nftDropContractAddress,
-    "nft-drop"
-  );
-  const { contract: tokenContract } = useContract(
-    tokenContractAddress,
-    "token"
-  );
+  const { contract: nftDropContract } = useContract("0x2f3883abdbb28410ae9c75dbb98cfd96f44945e8");
+ 
+  const { contract: tokenContract } = useContract("0xfA2B3C7F03D890F4761281E144825bdEbbCfbfc4");
+ 
   const { contract, isLoading } = useContract(stakingContractAddress);
   const { data: ownedNfts } = useOwnedNFTs(nftDropContract, address);
   const { data: tokenBalance } = useTokenBalance(tokenContract, address);
@@ -50,14 +44,15 @@ const Stake: NextPage = () => {
 
   async function stakeNft(id: string) {
     if (!address) return;
-
-    const isApproved = await nftDropContract?.isApproved(
-      address,
-      stakingContractAddress
-    );
+  
+    const isApproved = await nftDropContract?.isApprovedForAll("0x2f3883abdbb28410ae9c75dbb98cfd96f44945e8");
+    
     if (!isApproved) {
-      await nftDropContract?.setApprovalForAll(stakingContractAddress, true);
+      const approveTx = await nftDropContract?.approve(stakingContractAddress, id);
+      // Wait for the approval transaction to complete before staking
+      await approveTx?.wait();
     }
+    
     await contract?.call("stake", [[id]]);
   }
 
@@ -89,14 +84,6 @@ const Stake: NextPage = () => {
                     : ethers.utils.formatUnits(claimableRewards, 18)}
                 </b>{" "}
                 {tokenBalance?.symbol}
-              </p>
-            </div>
-            <div className={styles.tokenItem}>
-              <h3 className={styles.tokenLabel} style={{ color: "white" }}>
-                Current Balance
-              </h3>
-              <p className={styles.tokenValue}>
-                <b>{tokenBalance?.displayValue}</b> {tokenBalance?.symbol}
               </p>
             </div>
           </div>
